@@ -28,6 +28,7 @@ public class ClientService {
     }
 
     public  void deleteClient(Integer clientId){
+//        System.out.println();
         clientRepository.deleteById(clientId);
     }
 }
