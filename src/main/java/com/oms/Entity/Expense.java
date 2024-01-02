@@ -20,6 +20,8 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer expenseId;
 
+
+
     @Column(nullable = false)
     private Integer amount;
 
