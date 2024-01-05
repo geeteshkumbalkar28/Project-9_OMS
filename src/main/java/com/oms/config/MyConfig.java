@@ -30,7 +30,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableMethodSecurity(prePostEnabled = true)
 public class MyConfig {
     public static final String[] PUBLIC_URLS = {"/user/register", "/login",
-           "/forget-password"
+           "/forget-password","/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**","/v3/api-docs"
 
     };
     @Autowired

@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @RestController
+@RequestMapping("/users")
 public class ForgotPasswordController {
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
