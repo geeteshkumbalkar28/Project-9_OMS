@@ -24,7 +24,7 @@ public class Users implements UserDetails {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer user_id;
+    private Integer userId;
 
     @Column
     private LocalDate date;
@@ -195,13 +195,12 @@ public class Users implements UserDetails {
         return this.enabled;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-
-    public Integer getUser_id() {
-        return user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public List<UserTask> getUserTasks() {

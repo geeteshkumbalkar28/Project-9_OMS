@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto {
 	@Getter
-	private Integer user_id;
+	private Integer userId;
 	private Collection<? extends GrantedAuthority> authorities;
     private String email;
     private String fullName;
@@ -95,7 +95,11 @@ public class UserDto {
 		return this.enabled;
 	}
 
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 }

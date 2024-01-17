@@ -1,4 +1,4 @@
-package com.oms.controller;
+package com.oms.controller.user;
 
 import com.oms.Entity.EmailVerification;
 import com.oms.exceptions.InvalidCredentialsException;

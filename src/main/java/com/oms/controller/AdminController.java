@@ -35,6 +35,7 @@ public class AdminController {
 
 
     @GetMapping("/get/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> getUser(@PathVariable("userId") Integer userId){
 
         if (userId!=null) {
@@ -52,12 +53,14 @@ public class AdminController {
     }
 
     @GetMapping("get-all-users/{page}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getAllUsers(@PathVariable("page")Integer page) throws PageNotFoundException, TaskNotFoundException {
         List<UserDto> allUsers = this.userService.findAllUsers(page);
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable("userId")Integer userId){
         try {
             this.userService.deleteUserById(userId);
