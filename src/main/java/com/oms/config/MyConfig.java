@@ -30,7 +30,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableMethodSecurity(prePostEnabled = true)
 public class MyConfig {
     public static final String[] PUBLIC_URLS = {"/user/register", "/login",
-           "/forget-password","/users/**","/user/**","/admin/**"
+            "/forget-password", "/users/**", "/user/**", "/admin/**"
     };
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -49,7 +49,6 @@ public class MyConfig {
                                 //.requestMatchers(HttpMethod.POST).permitAll()
                                 //.requestMatchers(HttpMethod.PUT).permitAll()
                                 //.requestMatchers(HttpMethod.DELETE).permitAll().
-                                .requestMatchers("/delete-task/**","/update-user/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(this.jwtAuthenticationEntryPoint))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

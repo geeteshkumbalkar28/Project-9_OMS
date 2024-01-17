@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
 
             Set<UserRole> roles = new HashSet<>();
             Roles role = new Roles();
-            role.setId(45);
-            role.setName("ADMIN");
+            role.setId(44);
+            role.setName("NORMAL");
 
             UserRole userRole = new UserRole();
             userRole.setUser(user);
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
         for (int i = start; i < end; i++) {
             UserDto dto = toDTO(users.get(i));
-            dto.setUser_id(users.get(i).getUser_id());
+            dto.setUserId(users.get(i).getUserId());
             listOfUsersDto.add(dto);
         }
 
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     public UserDto toDTO(Users users) {
         UserDto dto = new UserDto();
-        dto.setUser_id(users.getUser_id());
+        dto.setUserId(users.getUserId());
         dto.setEmail(users.getEmail());
         dto.setFullName(users.getFullName());
         dto.setGender(users.getGender());
@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
     public static Users fromDTO(UserDto dto) {
         Users entity = new Users();
-        entity.setUser_id(dto.getUser_id());
+        entity.setUserId(dto.getUserId());
         entity.setEmail(dto.getEmail());
         entity.setFullName(dto.getFullName());
         entity.setGender(dto.getGender());
