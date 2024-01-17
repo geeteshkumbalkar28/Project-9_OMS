@@ -22,10 +22,10 @@ public class AddAssessment {
     private Integer interviewId;
 
     @Column
-    private OffsetDateTime assessmentDate;
+    private OffsetDateTime assesmentDate;
 
     @Column
-    private LocalTime assessmentTime;
+    private LocalTime assesmentTime;
 
     @Column
     private String email;
