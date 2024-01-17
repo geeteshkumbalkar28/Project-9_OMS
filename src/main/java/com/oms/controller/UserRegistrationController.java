@@ -133,8 +133,7 @@ public class UserRegistrationController {
         try {
             InputStream inputStream = getClass().getResourceAsStream("/templates/" + templateFileName);
             if (inputStream != null) {
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                     return reader.lines().collect(Collectors.joining(System.lineSeparator()));
                 }
             } else {

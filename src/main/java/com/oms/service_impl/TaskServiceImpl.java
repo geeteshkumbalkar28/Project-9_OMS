@@ -1,17 +1,21 @@
 package com.oms.service_impl;
 
 import com.oms.Entity.Task;
+import com.oms.Entity.UserTask;
+import com.oms.Entity.Users;
 import com.oms.dto.TaskDto;
+import com.oms.exceptions.PageNotFoundException;
 import com.oms.exceptions.ResourceNotFoundException;
+import com.oms.exceptions.UserNotFoundException;
 import com.oms.repositories.TaskRepository;
+import com.oms.repositories.UsersRepository;
 import com.oms.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -19,20 +23,35 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
+
     @Override
-    public void createTask(TaskDto taskDto) {
+    public void createTask(TaskDto taskDto, Integer userId) {
+
+
+        Users user = this.usersRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         try {
             Task task = toTaskEntity(taskDto);
+            UserTask userTask = new UserTask();
+            userTask.setUser(user);
+            userTask.setTask(task);
+            user.getUserTasks().add(userTask);
             taskRepository.save(task);
+            usersRepository.save(user);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
+
+
     }
 
     @Override
     public void updateTask(TaskDto taskDto, Integer taskId) {
         try {
-            Task task = taskRepository.findById(taskId).orElse(null);
+            Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
 
             if (task != null) {
                 task.setAssignedDate(taskDto.getAssignedDate());
@@ -66,21 +85,41 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> getAllTasks() {
-        try {
-            List<Task> users = this.taskRepository.findAll();
-            List<TaskDto> userDtos = users.stream().map(user->this.toTaskDto(user)).collect(Collectors.toList());
+    public List<TaskDto> getAllTasks(Integer id) throws PageNotFoundException {
 
-            return userDtos;
-        } catch (Exception e) {
-            return Collections.emptyList();
+
+        List<Task> tasks = taskRepository.findAll();
+
+        if (tasks.isEmpty()) {
+            throw new UserNotFoundException("No users found");
         }
+
+        int pageSize = 10;
+        int totalPages = (int) Math.ceil((double) tasks.size() / pageSize);
+
+        if (id >= totalPages) {
+            throw new PageNotFoundException("Page not found");
+        }
+
+        int start = id * pageSize;
+        int end = Math.min((id + 1) * pageSize, tasks.size());
+
+        List<TaskDto> listOfTaskDto = new ArrayList<>();
+
+        for (int i = start; i < end; i++) {
+            TaskDto dto = toTaskDto(tasks.get(i));
+            dto.setTaskId(tasks.get(i).getTask_id());
+            listOfTaskDto.add(dto);
+        }
+
+        return listOfTaskDto;
+
     }
 
     @Override
     public Optional<TaskDto> getTaskById(Integer taskId) {
         try {
-             Task task=this.taskRepository.findById(taskId).orElseThrow(()->new ResourceNotFoundException("User","id",taskId));
+            Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
             return Optional.ofNullable(this.toTaskDto(task));
         } catch (Exception e) {
             return Optional.empty();
@@ -89,11 +128,47 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTaskById(Integer taskId) {
-        Task task=this.taskRepository.findById(taskId).orElseThrow(()->new ResourceNotFoundException("User","id",taskId));
+
+        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "id", taskId));
+
         try {
-            taskRepository.deleteById(taskId);
+            this.taskRepository.deleteById(taskId);
         } catch (Exception e) {
         }
+    }
+
+    //get task of particular user
+    @Override
+    public List<TaskDto> getTaskOfUser(Integer id,Integer userId) throws PageNotFoundException {
+        Users users = this.usersRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        List<UserTask> userTasks = users.getUserTasks();
+
+        if (userTasks.isEmpty()) {
+            throw new UserNotFoundException("No tasks found for the user");
+        }
+
+        int pageSize = 10;
+        int totalPages = (int) Math.ceil((double) userTasks.size() / pageSize);
+
+        if (id >= totalPages) {
+            throw new PageNotFoundException("Page not found");
+        }
+
+        int start = id * pageSize;
+        int end = Math.min((id + 1) * pageSize, userTasks.size());
+
+        List<TaskDto> listOfTaskDto = new ArrayList<>();
+
+        for (int i = start; i < end; i++) {
+            UserTask userTask = userTasks.get(i);
+            Task task = userTask.getTask();
+            TaskDto dto = toTaskDto(task);
+            dto.setTaskId(task.getTask_id());
+            listOfTaskDto.add(dto);
+        }
+
+        return listOfTaskDto;
+
     }
 
 

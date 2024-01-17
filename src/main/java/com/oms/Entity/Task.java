@@ -1,13 +1,11 @@
 package com.oms.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +16,7 @@ import lombok.Setter;
 public class Task {
 
     @Id
-    @Column(name ="task_id")
+    @Column(name = "task_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer task_id;
 
@@ -91,234 +89,245 @@ public class Task {
     @OneToMany(mappedBy = "task")
     private Set<Token> taskTokens;
 
-	public Integer getTask_id() {
-		return task_id;
-	}
 
-	public void setTask_id(Integer task_id) {
-		this.task_id = task_id;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "task")
+    private Set<UserTask> userTasks = new HashSet<>();
 
-	public String getAssignedDate() {
-		return assignedDate;
-	}
 
-	public void setAssignedDate(String assignedDate) {
-		this.assignedDate = assignedDate;
-	}
+    public Integer getTask_id() {
+        return task_id;
+    }
 
-	public String getAssignedEndDate() {
-		return assignedEndDate;
-	}
+    public void setTask_id(Integer task_id) {
+        this.task_id = task_id;
+    }
 
-	public void setAssignedEndDate(String assignedEndDate) {
-		this.assignedEndDate = assignedEndDate;
-	}
+    public String getAssignedDate() {
+        return assignedDate;
+    }
 
-	public String getAssignedTo() {
-		return assignedTo;
-	}
+    public void setAssignedDate(String assignedDate) {
+        this.assignedDate = assignedDate;
+    }
 
-	public void setAssignedTo(String assignedTo) {
-		this.assignedTo = assignedTo;
-	}
+    public String getAssignedEndDate() {
+        return assignedEndDate;
+    }
 
-	public String getCalls() {
-		return calls;
-	}
+    public void setAssignedEndDate(String assignedEndDate) {
+        this.assignedEndDate = assignedEndDate;
+    }
 
-	public void setCalls(String calls) {
-		this.calls = calls;
-	}
+    public String getAssignedTo() {
+        return assignedTo;
+    }
 
-	public String getComments() {
-		return comments;
-	}
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
 
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
+    public String getCalls() {
+        return calls;
+    }
 
-	public String getCompletedTask() {
-		return completedTask;
-	}
+    public void setCalls(String calls) {
+        this.calls = calls;
+    }
 
-	public void setCompletedTask(String completedTask) {
-		this.completedTask = completedTask;
-	}
+    public String getComments() {
+        return comments;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getCompletedTask() {
+        return completedTask;
+    }
 
-	public Boolean getDone() {
-		return done;
-	}
+    public void setCompletedTask(String completedTask) {
+        this.completedTask = completedTask;
+    }
 
-	public void setDone(Boolean done) {
-		this.done = done;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public OffsetDateTime getDueDate() {
-		return dueDate;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setDueDate(OffsetDateTime dueDate) {
-		this.dueDate = dueDate;
-	}
+    public Boolean getDone() {
+        return done;
+    }
 
-	public Boolean getInProgress() {
-		return inProgress;
-	}
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
 
-	public void setInProgress(Boolean inProgress) {
-		this.inProgress = inProgress;
-	}
+    public OffsetDateTime getDueDate() {
+        return dueDate;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public void setDueDate(OffsetDateTime dueDate) {
+        this.dueDate = dueDate;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public Boolean getInProgress() {
+        return inProgress;
+    }
 
-	public String getNoOfTask() {
-		return noOfTask;
-	}
+    public void setInProgress(Boolean inProgress) {
+        this.inProgress = inProgress;
+    }
 
-	public void setNoOfTask(String noOfTask) {
-		this.noOfTask = noOfTask;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getPendingTask() {
-		return pendingTask;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public void setPendingTask(String pendingTask) {
-		this.pendingTask = pendingTask;
-	}
+    public String getNoOfTask() {
+        return noOfTask;
+    }
 
-	public String getProjectName() {
-		return projectName;
-	}
+    public void setNoOfTask(String noOfTask) {
+        this.noOfTask = noOfTask;
+    }
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
+    public String getPendingTask() {
+        return pendingTask;
+    }
 
-	public Boolean getStatus() {
-		return status;
-	}
+    public void setPendingTask(String pendingTask) {
+        this.pendingTask = pendingTask;
+    }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+    public String getProjectName() {
+        return projectName;
+    }
 
-	public String getTask() {
-		return task;
-	}
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
-	public void setTask(String task) {
-		this.task = task;
-	}
+    public Boolean getStatus() {
+        return status;
+    }
 
-	public String getTaskName() {
-		return taskName;
-	}
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
+    public String getTask() {
+        return task;
+    }
 
-	public String getTaskSubmitted() {
-		return taskSubmitted;
-	}
+    public void setTask(String task) {
+        this.task = task;
+    }
 
-	public void setTaskSubmitted(String taskSubmitted) {
-		this.taskSubmitted = taskSubmitted;
-	}
+    public String getTaskName() {
+        return taskName;
+    }
 
-	public String getTotalCall() {
-		return totalCall;
-	}
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
 
-	public void setTotalCall(String totalCall) {
-		this.totalCall = totalCall;
-	}
+    public String getTaskSubmitted() {
+        return taskSubmitted;
+    }
 
-	public OffsetDateTime getTotalCallAttended() {
-		return totalCallAttended;
-	}
+    public void setTaskSubmitted(String taskSubmitted) {
+        this.taskSubmitted = taskSubmitted;
+    }
 
-	public void setTotalCallAttended(OffsetDateTime totalCallAttended) {
-		this.totalCallAttended = totalCallAttended;
-	}
+    public String getTotalCall() {
+        return totalCall;
+    }
 
-	public String getTotalPeopleConsulted() {
-		return totalPeopleConsulted;
-	}
+    public void setTotalCall(String totalCall) {
+        this.totalCall = totalCall;
+    }
 
-	public void setTotalPeopleConsulted(String totalPeopleConsulted) {
-		this.totalPeopleConsulted = totalPeopleConsulted;
-	}
+    public OffsetDateTime getTotalCallAttended() {
+        return totalCallAttended;
+    }
 
-	public String getTotalReplies() {
-		return totalReplies;
-	}
+    public void setTotalCallAttended(OffsetDateTime totalCallAttended) {
+        this.totalCallAttended = totalCallAttended;
+    }
 
-	public void setTotalReplies(String totalReplies) {
-		this.totalReplies = totalReplies;
-	}
+    public String getTotalPeopleConsulted() {
+        return totalPeopleConsulted;
+    }
 
-	public Set<Token> getTaskTokens() {
-		return taskTokens;
-	}
+    public void setTotalPeopleConsulted(String totalPeopleConsulted) {
+        this.totalPeopleConsulted = totalPeopleConsulted;
+    }
 
-	public void setTaskTokens(Set<Token> taskTokens) {
-		this.taskTokens = taskTokens;
-	}
+    public String getTotalReplies() {
+        return totalReplies;
+    }
 
-	public Task() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public void setTotalReplies(String totalReplies) {
+        this.totalReplies = totalReplies;
+    }
 
-	public Task(Integer task_id, String assignedDate, String assignedEndDate, String assignedTo, String calls,
-			String comments, String completedTask, String description, Boolean done, OffsetDateTime dueDate,
-			Boolean inProgress, String message, String noOfTask, String pendingTask, String projectName, Boolean status,
-			String task, String taskName, String taskSubmitted, String totalCall, OffsetDateTime totalCallAttended,
-			String totalPeopleConsulted, String totalReplies, Set<Token> taskTokens) {
-		super();
-		this.task_id = task_id;
-		this.assignedDate = assignedDate;
-		this.assignedEndDate = assignedEndDate;
-		this.assignedTo = assignedTo;
-		this.calls = calls;
-		this.comments = comments;
-		this.completedTask = completedTask;
-		this.description = description;
-		this.done = done;
-		this.dueDate = dueDate;
-		this.inProgress = inProgress;
-		this.message = message;
-		this.noOfTask = noOfTask;
-		this.pendingTask = pendingTask;
-		this.projectName = projectName;
-		this.status = status;
-		this.task = task;
-		this.taskName = taskName;
-		this.taskSubmitted = taskSubmitted;
-		this.totalCall = totalCall;
-		this.totalCallAttended = totalCallAttended;
-		this.totalPeopleConsulted = totalPeopleConsulted;
-		this.totalReplies = totalReplies;
-		this.taskTokens = taskTokens;
-	}
+    public Set<Token> getTaskTokens() {
+        return taskTokens;
+    }
 
-    
+    public void setTaskTokens(Set<Token> taskTokens) {
+        this.taskTokens = taskTokens;
+    }
+
+    public Task() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+    public Task(Integer task_id, String assignedDate, String assignedEndDate, String assignedTo, String calls,
+                String comments, String completedTask, String description, Boolean done, OffsetDateTime dueDate,
+                Boolean inProgress, String message, String noOfTask, String pendingTask, String projectName, Boolean status,
+                String task, String taskName, String taskSubmitted, String totalCall, OffsetDateTime totalCallAttended,
+                String totalPeopleConsulted, String totalReplies, Set<Token> taskTokens) {
+        super();
+        this.task_id = task_id;
+        this.assignedDate = assignedDate;
+        this.assignedEndDate = assignedEndDate;
+        this.assignedTo = assignedTo;
+        this.calls = calls;
+        this.comments = comments;
+        this.completedTask = completedTask;
+        this.description = description;
+        this.done = done;
+        this.dueDate = dueDate;
+        this.inProgress = inProgress;
+        this.message = message;
+        this.noOfTask = noOfTask;
+        this.pendingTask = pendingTask;
+        this.projectName = projectName;
+        this.status = status;
+        this.task = task;
+        this.taskName = taskName;
+        this.taskSubmitted = taskSubmitted;
+        this.totalCall = totalCall;
+        this.totalCallAttended = totalCallAttended;
+        this.totalPeopleConsulted = totalPeopleConsulted;
+        this.totalReplies = totalReplies;
+        this.taskTokens = taskTokens;
+    }
+
+    public Set<UserTask> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(Set<UserTask> userTasks) {
+        this.userTasks = userTasks;
+    }
 }

@@ -2,12 +2,14 @@ package com.oms.service_impl;
 
 import com.oms.Entity.Project;
 import com.oms.dto.ProjectDto;
+import com.oms.exceptions.ProjectNotFoundException;
 import com.oms.exceptions.ResourceNotFoundException;
 import com.oms.repositories.ProjectRepository;
 import com.oms.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -53,15 +55,33 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
     @Override
-    public List<ProjectDto> getAllProjects() {
-        try {
-            List<Project> projects = this.projectRepository.findAll();
-            List<ProjectDto> projectDtos = projects.stream().map(this::toProjectDto).collect(Collectors.toList());
+    public List<ProjectDto> getAllProjects(Integer id) throws ProjectNotFoundException {
+        List<Project> projects = projectRepository.findAll();
 
-            return projectDtos;
-        } catch (Exception e) {
-            return Collections.emptyList();
+        if (projects.isEmpty()) {
+            throw new ProjectNotFoundException("No projects found");
         }
+
+        int pageSize = 10;
+        int totalPages = (int) Math.ceil((double) projects.size() / pageSize);
+
+        if (id >= totalPages) {
+            throw new ProjectNotFoundException("Page not found");
+        }
+
+        int start = id * pageSize;
+        int end = Math.min((id + 1) * pageSize, projects.size());
+
+        List<ProjectDto> listOfProjectDto = new ArrayList<>();
+
+        for (int i = start; i < end; i++) {
+            ProjectDto dto = toProjectDto(projects.get(i));
+            dto.setProjectId(projects.get(i).getProjectId());
+            listOfProjectDto.add(dto);
+        }
+
+        return listOfProjectDto;
+
     }
 
     @Override

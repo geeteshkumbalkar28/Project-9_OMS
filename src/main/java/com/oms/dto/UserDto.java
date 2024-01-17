@@ -1,11 +1,14 @@
 package com.oms.dto;
 
-import jakarta.persistence.Entity;
+import com.oms.Entity.UserRole;
+import com.oms.Entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -14,7 +17,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-
+	@Getter
+	private Integer user_id;
+	private Collection<? extends GrantedAuthority> authorities;
     private String email;
     private String fullName;
     private String gender;
@@ -22,9 +27,12 @@ public class UserDto {
     private String password;
     private String ref;
     private String status;
-    private Set<Integer> roleIds;
+	private boolean enabled;
     private Set<Integer> userTaskIds;
-	public String getEmail() {
+
+
+
+    public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
@@ -66,17 +74,28 @@ public class UserDto {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Set<Integer> getRoleIds() {
-		return roleIds;
-	}
-	public void setRoleIds(Set<Integer> roleIds) {
-		this.roleIds = roleIds;
-	}
+
 	public Set<Integer> getUserTaskIds() {
 		return userTaskIds;
 	}
 	public void setUserTaskIds(Set<Integer> userTaskIds) {
 		this.userTaskIds = userTaskIds;
 	}
-    
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean getEnabled() {
+		return this.enabled;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
 }

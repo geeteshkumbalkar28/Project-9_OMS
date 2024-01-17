@@ -2,6 +2,8 @@ package com.oms.controller;
 
 import com.oms.Entity.Project;
 import com.oms.dto.ProjectDto;
+import com.oms.dto.TaskDto;
+import com.oms.exceptions.ProjectNotFoundException;
 import com.oms.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,14 +42,10 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<List<ProjectDto>> showAllProjects() {
-        try {
-            List<ProjectDto> allProjects = this.projectService.getAllProjects();
-            return ResponseEntity.ok(allProjects);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    @GetMapping("/get-all/{page}")
+    public ResponseEntity<List<ProjectDto>> showAllProjects(@PathVariable("page") Integer page) throws ProjectNotFoundException {
+        List<ProjectDto> allTasks = this.projectService.getAllProjects(page);
+        return new ResponseEntity<>(allTasks, HttpStatus.OK);
     }
 
     @GetMapping("/get/{projectId}")

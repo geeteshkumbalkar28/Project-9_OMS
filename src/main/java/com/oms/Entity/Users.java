@@ -7,13 +7,12 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
@@ -21,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class Users implements UserDetails {
 
+    @Getter
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,17 +49,11 @@ public class Users implements UserDetails {
 
     @Column(length = 45)
     private String status;
+    private boolean enabled = true;
 
-    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-//    private Set<Roles> roles;
-//
-//
-    @ManyToMany
-    @JoinTable(name = "user_task", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "task_id"))
-    private Set<Task> userTaskTasks;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTask> userTasks;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
@@ -68,11 +62,12 @@ public class Users implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> set = new HashSet<>();
 
-        Set<Authority> set = new HashSet<>();
-        this.userRoles.forEach(userRole -> {
-            set.add(new Authority(userRole.getRole().getName()));
-        });
+        for (UserRole userRole : this.userRoles) {
+            Roles role = userRole.getRole();
+            set.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        }
 
         return set;
     }
@@ -112,14 +107,6 @@ public class Users implements UserDetails {
 
         return true;
     }
-
-//    public Integer getUser_id() {
-//        return user_id;
-//    }
-//
-//    public void setUser_id(Integer user_id) {
-//        this.user_id = user_id;
-//    }
 
     public LocalDate getDate() {
         return date;
@@ -185,13 +172,6 @@ public class Users implements UserDetails {
         this.status = status;
     }
 
-    public Set<Task> getUserTaskTasks() {
-        return userTaskTasks;
-    }
-
-    public void setUserTaskTasks(Set<Task> userTaskTasks) {
-        this.userTaskTasks = userTaskTasks;
-    }
 
     public Set<UserRole> getUserRoles() {
         return userRoles;
@@ -201,25 +181,34 @@ public class Users implements UserDetails {
         this.userRoles = userRoles;
     }
 
-    public Users(Integer user_id, LocalDate date, String email, String fullName, String gender, String moNumber, String password, String ref, String status, Set<Task> userTaskTasks, Set<UserRole> userRoles) {
-        super();
-        this.user_id = user_id;
-        this.date = date;
-        this.email = email;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.moNumber = moNumber;
-        this.password = password;
-        this.ref = ref;
-        this.status = status;
-        this.userTaskTasks = userTaskTasks;
-        this.userRoles = userRoles;
-    }
 
     public Users() {
         super();
         // TODO Auto-generated constructor stub
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
+    public boolean getEnabled() {
+        return this.enabled;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
+    }
+
+
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public List<UserTask> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(List<UserTask> userTasks) {
+        this.userTasks = userTasks;
+    }
 }

@@ -34,36 +34,36 @@ public class UserLoginController {
     private AuthenticationManager authenticationManager;
 
 
-    EmailVerification ev = new EmailVerification();
-
-
     // generate token
     @PostMapping("/login")
-    public ResponseEntity<?> generateToken(@RequestBody JwtAuthRequest jwtRequest) throws Exception {
+    public ResponseEntity<JwtAuthResponse> generateToken(@RequestBody JwtAuthRequest jwtRequest) throws Exception {
 
         try {
-            this.authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
-        } catch (UsernameNotFoundException e) {
-            throw new Exception("User not found");
-        } catch (InvalidCredentialsException e) {
-            throw new InvalidCredentialsException("Invalid credentials");
+            try {
+                this.authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
+            } catch (UsernameNotFoundException e) {
+                throw new Exception("User not found");
+            } catch (InvalidCredentialsException e) {
+                throw new InvalidCredentialsException("Invalid credentials");
+            }
+            // authentication done
+            UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
+            String token = this.jwtTokenHelper.generateToken(userDetails);
+            return ResponseEntity.ok(new JwtAuthResponse(token, "success"));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new JwtAuthResponse("null", "Invalid credentials"));
         }
-        // authentication done
-        UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
-        String token = this.jwtTokenHelper.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtAuthResponse(token));
     }
 
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (UserDisabledException e) {
-            throw new UserDisabledException("USER DISABLED");
+            throw new UserDisabledException("User Disabled");
         } catch (InvalidCredentialsException e) {
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
     }
-
 
 }

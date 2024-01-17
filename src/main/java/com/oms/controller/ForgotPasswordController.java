@@ -42,22 +42,19 @@ public class ForgotPasswordController {
     @Autowired
     private EmailVerificationRepository emailVerificationRepository;
 
-    EmailVerification emailVerification = new EmailVerification();
-
 
     // generate token
     @PostMapping("/forget-password")
-    public ResponseEntity<?> generateToken(@RequestParam String email) throws Exception {
+    public ResponseEntity<JwtAuthResponse> generateToken(@RequestParam String email) throws Exception {
 
         try {
             Users findByEmail = this.usersRepository.findByEmail(email);
             String token = this.jwtTokenHelper.generateToken(findByEmail);
-            return ResponseEntity.ok(new JwtAuthResponse(token));
+            return ResponseEntity.ok(new JwtAuthResponse(token, "success"));
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
-            throw new Exception("user not found");
+            return ResponseEntity.ok(new JwtAuthResponse("null", "Invalid credentials"));
         }
-        // authentication done
 
     }
 
@@ -85,8 +82,7 @@ public class ForgotPasswordController {
                 return "Please try again..!!";
             }
         } catch (Exception e) {
-
-            e.printStackTrace(); // or log.error("Exception occurred: ", e);
+            e.printStackTrace();
             return "An error occurred while processing your request. Please try again later.";
         }
 
@@ -109,7 +105,7 @@ public class ForgotPasswordController {
                 if (duration.toMinutes() <= 3) {
                     emailVerification.setStatus("Verified");
                     emailVerificationRepository.save(emailVerification);
-                    // this.evr.delete(emailVerification);
+
                     return "Verified";
                 } else {
                     throw new OtpExpiredException("OTP has expired");
@@ -141,7 +137,7 @@ public class ForgotPasswordController {
                 return new ResponseEntity<>("failed: password not matched ", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else if (emailVerification != null && emailVerification.getStatus().equals("Not verified")) {
-            // OTP verification pending
+
             return new ResponseEntity<>("OTP verification pending", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("OTP verification is pending or email is null", HttpStatus.BAD_REQUEST);

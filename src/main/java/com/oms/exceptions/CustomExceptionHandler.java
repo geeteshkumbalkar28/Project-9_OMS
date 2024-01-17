@@ -68,5 +68,43 @@ public class CustomExceptionHandler {
         return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ValueNotNullException.class)
+    public ResponseEntity<ApiResponse> valueNotNullExceptionHandler(ValueNotNullException ex){
+
+        String message=ex.getMessage();
+        ApiResponse apiResponse =new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse> userNotFoundExceptionHandler(UserNotFoundException ex){
+
+        String message=ex.getMessage();
+        ApiResponse apiResponse =new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(PageNotFoundException.class)
+    public ResponseEntity<ApiResponse> pageNotFoundExceptionHandler(PageNotFoundException ex){
+
+        String message=ex.getMessage();
+        ApiResponse apiResponse =new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ApiResponse> projectNotFoundExceptionHandler(ProjectNotFoundException ex){
+
+        String message=ex.getMessage();
+        ApiResponse apiResponse =new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<ApiResponse> taskNotFoundExceptionHandler(TaskNotFoundException ex){
+
+        String message=ex.getMessage();
+        ApiResponse apiResponse =new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
 
 }

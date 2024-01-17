@@ -3,6 +3,7 @@ package com.oms.service;
 import com.oms.Entity.Users;
 import com.oms.exceptions.InvalidCredentialsException;
 import com.oms.exceptions.ResourceNotFoundException;
+import com.oms.exceptions.UserDisabledException;
 import com.oms.repositories.UsersRepository;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (users == null) {
             System.out.println("user not found");
             throw new ResourceNotFoundException("user not found","email",email);
+        }else if(!users.getEnabled()){
+            System.out.println("user is disabled");
+            throw new UserDisabledException("User is disabled");
         }
+
         return users;
     }
 }

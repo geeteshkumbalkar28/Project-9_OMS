@@ -1,10 +1,13 @@
 package com.oms.controller;
 
 import com.oms.dto.TaskDto;
+import com.oms.dto.UserDto;
+import com.oms.exceptions.PageNotFoundException;
 import com.oms.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +19,10 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @PostMapping("/add-task")
-    public ResponseEntity<String> addTask(@RequestBody TaskDto taskDto) {
+    @PostMapping("/add-task/{userId}")
+    public ResponseEntity<String> addTask(@RequestBody TaskDto taskDto, @PathVariable("userId") Integer userId) {
         try {
-            this.taskService.createTask(taskDto);
+            this.taskService.createTask(taskDto, userId);
             return ResponseEntity.ok("Task created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create task: " + e.getMessage());
@@ -36,14 +39,10 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/get-all-tasks")
-    public ResponseEntity<List<TaskDto>> showAllTasks() {
-        try {
-            List<TaskDto> allTasks = this.taskService.getAllTasks();
-            return ResponseEntity.ok(allTasks);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    @GetMapping("/get-all-tasks/{page}")
+    public ResponseEntity<List<TaskDto>> showAllTasks(@PathVariable("page") Integer page) throws PageNotFoundException {
+        List<TaskDto> allTasks = this.taskService.getAllTasks(page);
+        return new ResponseEntity<>(allTasks, HttpStatus.OK);
     }
 
     @GetMapping("/get-task/{taskId}")
@@ -58,10 +57,10 @@ public class TaskController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Optional.empty());
         }
-
     }
 
     @DeleteMapping("/delete-task/{taskId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteTask(@PathVariable("taskId") Integer taskId) {
         try {
             this.taskService.deleteTaskById(taskId);
@@ -69,5 +68,11 @@ public class TaskController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/get-tasks-user/{page}/{userId}")
+    public ResponseEntity<List<TaskDto>> getTaskOfParticularUser(@PathVariable("page") Integer page, @PathVariable("userId") Integer userId) throws PageNotFoundException {
+        List<TaskDto> taskOfUser = this.taskService.getTaskOfUser(page, userId);
+        return new ResponseEntity<>(taskOfUser, HttpStatus.OK);
     }
 }
