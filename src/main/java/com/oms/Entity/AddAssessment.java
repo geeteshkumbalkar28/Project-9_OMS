@@ -1,14 +1,12 @@
 package com.oms.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
+import com.oms.dto.AssessmentDto.AddAssesmentDto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 
 
 @Entity
@@ -19,7 +17,7 @@ public class AddAssessment {
     @Id
     @Column(name= "assessment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer interviewId;
+    private Integer assessmentId;
 
     @Column
     private OffsetDateTime assesmentDate;
@@ -51,4 +49,20 @@ public class AddAssessment {
     @Column(nullable = false)
     private Boolean status;
 
-}
+
+    public AddAssessment() {
+    }
+
+    public AddAssessment(AddAssesmentDto addAssesmentDto) {
+        this.assesmentDate=addAssesmentDto.getAssesmentDate();
+        this.assesmentTime=addAssesmentDto.getAssesmentTime();
+        this.email= addAssesmentDto.getEmail();
+        this.firstName= addAssesmentDto.getFirstName();
+        this.lastName= addAssesmentDto.getLastName();
+        this.mobile= addAssesmentDto.getMobile();
+        this.profile= addAssesmentDto.getMobile();
+        this.result=addAssesmentDto.getResult();
+        this.sex= addAssesmentDto.getSex();
+        this.status=addAssesmentDto.getStatus();
+        this.assessmentId=addAssesmentDto.getAssessmentId();
+    }}

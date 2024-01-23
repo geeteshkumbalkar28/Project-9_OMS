@@ -1,18 +1,18 @@
 package com.oms.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import java.time.OffsetDateTime;
+import com.oms.dto.AssessmentDto.ClientDto;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.OffsetDateTime;
 
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Client {
 
     @Id
@@ -62,4 +62,21 @@ public class Client {
     @Column(length = 45)
     private String userId;
 
+    public Client(ClientDto clientDto) {
+        this.clientId = clientDto.getClientId();
+        this.companyAddress = clientDto.getCompanyAddress();
+        this.companyRegNumber = clientDto.getCompanyRegNumber();
+        this.dateOfBirth = clientDto.getDateOfBirth();
+        this.dateOfJoining = clientDto.getDateOfJoining();
+        this.email = clientDto.getEmail();
+        this.firstName = clientDto.getEmail();
+        this.lastName = clientDto.getLastName();
+        this.gender = clientDto.getGender();
+        this.gstNumber = clientDto.getGstNumber();
+        this.mobileNumber = clientDto.getMobileNumber();
+        this.panNumber = clientDto.getPanNumber();
+        this.serviceOrProduct= clientDto.getServiceOrProduct();
+        this.status=clientDto.getStatus();
+        this.userId = clientDto.getUserId();
+    }
 }
